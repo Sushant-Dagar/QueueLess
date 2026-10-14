@@ -1,0 +1,23 @@
+# One command to run QueueLess locally: docker compose up --build  →  http://localhost:3000
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: queueless
+      POSTGRES_PASSWORD: queueless
+      POSTGRES_DB: queueless
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U queueless"]
+      interval: 5s
+      retries: 10
+  app:
+    build: .
+    ports: ["3000:3000"]
+    environment:
+      DATABASE_URL: postgresql://queueless:queueless@db:5432/queueless
+      SESSION_SECRET: local-docker-secret-change-me-32-chars-min
+    depends_on:
+      db: { condition: service_healthy }
+volumes:
+  pgdata:

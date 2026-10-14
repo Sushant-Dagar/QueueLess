@@ -1,0 +1,19 @@
+# Render Blueprint: New > Blueprint > pick this repo. Creates the web service and a Postgres database.
+services:
+  - type: web
+    name: queueless
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm run db:migrate && npm run db:seed && npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATABASE_URL
+        fromDatabase: { name: queueless-db, property: connectionString }
+      - key: SESSION_SECRET
+        generateValue: true
+databases:
+  - name: queueless-db
+    plan: free

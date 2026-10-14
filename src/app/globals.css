@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+/*
+  QueueLess visual system
+  Grounded in the paper token slips and amber LED token boards found in Indian clinics and banks.
+  ink      #17323A  deep blue-green, like a ballpoint on a token slip
+  paper    #F3F6F5  cool paper (not cream)
+  rule     #CBD6D3  perforations and dividers
+  amber    #F0A202  LED amber, used ONLY for token numbers being called
+  go       #157F4A  "your turn" green
+  stop     #B42318  errors / skipped
+*/
+@theme {
+  --color-ink: #17323a;
+  --color-ink-soft: #4d6168;
+  --color-paper: #f3f6f5;
+  --color-slip: #ffffff;
+  --color-rule: #cbd6d3;
+  --color-amber: #f0a202;
+  --color-amber-deep: #8a5a00;
+  --color-go: #157f4a;
+  --color-stop: #b42318;
+  --color-board: #10181a;
+  --font-sans: "Hind", ui-sans-serif, system-ui, sans-serif;
+  --font-token: "Big Shoulders Display", "Hind", ui-sans-serif, sans-serif;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.token-num {
+  font-family: var(--font-token);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  line-height: 0.9;
+}
+
+/* Perforated edge on the token slip: a row of punched holes, like a tear-off ticket. */
+.slip-perf {
+  height: 14px;
+  background:
+    radial-gradient(circle at 7px 7px, var(--color-paper) 5px, transparent 5.5px) 0 0 / 18px 14px repeat-x,
+    var(--color-slip);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-amber);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* One deliberate motion: the called token pulses once on arrival. */
+@keyframes token-arrive {
+  0% { transform: scale(0.92); opacity: 0.2; }
+  60% { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.token-arrive {
+  animation: token-arrive 600ms cubic-bezier(.2,.8,.2,1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .token-arrive { animation: none; }
+}
